@@ -35,10 +35,13 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())//cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1.0/health",
+                        .requestMatchers(
+                                "/api/v1.0/health",
                                 "/api/v1.0/register",
                                 "/api/v1.0/login",
-                                "/api/v1.0/activate").permitAll()
+                                "/api/v1.0/activate"
+                        ).permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
