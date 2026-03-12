@@ -36,12 +36,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1.0/health",
-                                "/api/v1.0/register",
-                                "/api/v1.0/login",
-                                "/api/v1.0/activate"
+                                "/health",
+                                "/register",
+                                "/login",
+                                "/activate"
                         ).permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
