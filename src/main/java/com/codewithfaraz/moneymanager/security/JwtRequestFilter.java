@@ -23,7 +23,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final AppUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    @Override
+    /*@Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
@@ -31,7 +31,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.equals("/api/v1.0/login")
                 || path.equals("/api/v1.0/activate")
                 || path.equals("/api/v1.0/health");
-    }
+    }*/
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
