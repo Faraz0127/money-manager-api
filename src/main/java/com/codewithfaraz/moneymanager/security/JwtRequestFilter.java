@@ -30,7 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return path.equals("/register")
     || path.equals("/login")
     || path.equals("/activate")
-    || path.equals("/health");
+    || path.equals("/health") || path.equals("/error");
     }
 
     @Override
