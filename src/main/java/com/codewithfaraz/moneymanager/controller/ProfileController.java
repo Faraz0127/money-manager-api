@@ -4,6 +4,7 @@ import com.codewithfaraz.moneymanager.dto.AuthDTO;
 import com.codewithfaraz.moneymanager.dto.ProfileDTO;
 import com.codewithfaraz.moneymanager.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,9 @@ public class ProfileController {
         try {
             ProfileDTO registeredProfile = profileService.registerProfile(profileDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredProfile);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Email already registered"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Map.of("message", e.getMessage()));
