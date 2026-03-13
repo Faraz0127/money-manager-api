@@ -29,7 +29,7 @@ public class EmailService {
                 "textContent", body
         );
 
-        webClient.post()
+        String response = webClient.post()
                 .uri("/smtp/email")
                 .header("api-key", apiKey)
                 .header("Content-Type", "application/json")
@@ -37,5 +37,7 @@ public class EmailService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
+        System.out.println("Brevo API response: " + response);
     }
 }
