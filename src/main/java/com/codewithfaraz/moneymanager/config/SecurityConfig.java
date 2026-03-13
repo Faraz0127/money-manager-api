@@ -39,8 +39,9 @@ public class SecurityConfig {
                                         "/health",
                                         "/register",
                                         "/login",
-                                        "/activate"
-                                ).permitAll()
+                                        "/activate",
+                                        "/error"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
