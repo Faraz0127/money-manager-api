@@ -56,4 +56,12 @@ public class ProfileController {
         }
     }
 
+    // 4. Get Current Profile API
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileDTO> getPublicProfile() {
+        // Passing null forces the service to load the profile from the Spring Security context
+        ProfileDTO profileDTO = profileService.getPublicProfile(null);
+        return ResponseEntity.ok(profileDTO);
+    }
+
 }
