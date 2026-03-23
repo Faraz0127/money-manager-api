@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,23 @@ public class ExpenseController {
 
 
     @GetMapping
-    public ResponseEntity<List<ExpenseDTO>> getExpenses() {
-        List<ExpenseDTO> expenses = expenseService.getCurrentMonthExpensesForCurrentUser();
+    public ResponseEntity<List<ExpenseDTO>> getExpenses(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
+    ) {
+        List<ExpenseDTO> expenses;
+
+        if (startDate != null && endDate != null) {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+            expenses = expenseService.getExpensesByDateRange(start, end);
+        } else {
+            // Default: return current month
+            LocalDate start = LocalDate.now().withDayOfMonth(1);
+            LocalDate end = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+            expenses = expenseService.getExpensesByDateRange(start, end);
+        }
+
         return ResponseEntity.ok(expenses);
     }
 

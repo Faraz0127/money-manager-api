@@ -20,12 +20,12 @@ const ExpenseOverview = ({ transactions, onAddExpense }) => {
                         Track your spending over time and analyze your expense trends
                     </p>
                 </div>
-                <button
-                    className="add-btn flex items-center gap-1"
-                    onClick={onAddExpense}
-                >
-                    <Plus size={15} /> Add Expense
-                </button>
+                <button 
+    className="btn-primary"
+    onClick={onAddExpense}
+>
+    <Plus size={15} /> Add Expense
+</button>
             </div>
             <div className="mt-10">
                 <CustomLineChart data={chartData} />

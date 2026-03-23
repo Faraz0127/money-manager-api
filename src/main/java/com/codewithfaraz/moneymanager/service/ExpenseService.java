@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +111,18 @@ public class ExpenseService {
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();
+    }
+
+    public List<ExpenseDTO> getExpensesByDateRange(LocalDate startDate, LocalDate endDate) {
+        ProfileEntity profile = profileService.getCurrentProfile();
+
+        return expenseRepository.findByProfileIdAndDateBetweenOrderByDateDesc(
+                        profile.getId(),
+                        startDate,
+                        endDate
+                )
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -35,7 +35,7 @@ const RecentTransactions = ({ transactions, onMore }) => {
                         amount={item.amount}
                         type={item.type}
                         // Hides the trash icon to prevent deletions from the dashboard
-                        hideDeleteButton={true} 
+                        hideDeleteButton={false} 
                     />
                 ))}
             </div>

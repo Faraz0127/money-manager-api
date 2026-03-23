@@ -30,11 +30,11 @@ const IncomeOverview = ({ transactions, onAddIncome }) => {
                 
                 {/* Add Income Button */}
                 <button 
-                    className="add-btn flex items-center gap-1"
-                    onClick={onAddIncome}
-                >
-                    <Plus size={15} /> Add Income
-                </button>
+    className="btn-primary"
+    onClick={onAddIncome}
+>
+    <Plus size={15} /> Add Income
+</button>
             </div>
 
             {/* Line Chart Section */}

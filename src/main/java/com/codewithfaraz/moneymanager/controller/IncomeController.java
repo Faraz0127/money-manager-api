@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,23 @@ public class IncomeController {
 
 
     @GetMapping
-    public ResponseEntity<List<IncomeDTO>> getIncomes() {
-        List<IncomeDTO> incomes = incomeService.getCurrentMonthIncomesForCurrentUser();
+    public ResponseEntity<List<IncomeDTO>> getIncomes(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
+    ) {
+        List<IncomeDTO> incomes;
+
+        if (startDate != null && endDate != null) {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+            incomes = incomeService.getIncomesByDateRange(start, end);
+        } else {
+            // Default: return current month
+            LocalDate start = LocalDate.now().withDayOfMonth(1);
+            LocalDate end = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+            incomes = incomeService.getIncomesByDateRange(start, end);
+        }
+
         return ResponseEntity.ok(incomes);
     }
 

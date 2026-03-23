@@ -6,3 +6,7 @@ body{
   background-color: #fcfbfc;
   overflow-x: hidden  ;
 }
+
+.btn-primary {
+  @apply bg-purple-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2;
+}

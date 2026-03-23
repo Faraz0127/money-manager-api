@@ -1,109 +1,115 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wallet, Coins, CreditCard } from 'lucide-react'; 
+import { Wallet, Coins, CreditCard } from 'lucide-react';
 
-// Layout and Context
 import Dashboard from '../Components/Dashboard';
 import useUser from '../hooks/useUser';
 
-// Reusable UI Components
-import InfoCard from '../components/InfoCard';
-import RecentTransactions from '../components/RecentTransactions';
-import FinanceOverview from '../components/FinanceOverview';
-import Transactions from '../components/Transactions';
+import InfoCard from '../Components/InfoCard';
+import RecentTransactions from '../Components/RecentTransactions';
+import FinanceOverview from '../Components/FinanceOverview';
+import Transactions from '../Components/Transactions';
 
-// Utils and API Configuration
 import axiosConfig from '../util/axiosConfig';
 import { API_ENDPOINTS } from '../util/apiEndpoints';
 import { addThousandSeparator } from '../util/helper';
 
 const Home = () => {
-    // Check if the user is authenticated and retrieve their details
     const { user } = useUser();
     const navigate = useNavigate();
 
-    // Component states
     const [dashboardData, setDashboardData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Fetch the aggregated dashboard data from the Spring Boot backend
     const fetchDashboardData = async () => {
         if (isLoading) return;
+
         setIsLoading(true);
-        
         try {
             const response = await axiosConfig.get(API_ENDPOINTS.DASHBOARD_DATA);
             if (response.status === 200) {
                 setDashboardData(response.data);
             }
         } catch (error) {
-            console.error("Something went wrong while fetching the dashboard data", error);
+            console.error("Dashboard fetch error:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Load data on component mount
     useEffect(() => {
         fetchDashboardData();
     }, []);
 
     return (
-        // Wrap the page in the universal dashboard layout and highlight the "Dashboard" menu item
         <Dashboard activeMenu="Dashboard">
-            <div className="my-5 mx-auto">
-                
-                {/* Top Grid: High-level Info Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <InfoCard
-                        icon={<Wallet />}
-                        label="Total Balance"
-                        value={addThousandSeparator(dashboardData?.totalBalance || 0)}
-                        color="bg-purple-800"
-                    />
-                    <InfoCard
-                        icon={<Coins />}
-                        label="Total Income"
-                        value={addThousandSeparator(dashboardData?.totalIncome || 0)}
-                        color="bg-green-800"
-                    />
-                    <InfoCard
-                        icon={<CreditCard />}
-                        label="Total Expense"
-                        value={addThousandSeparator(dashboardData?.totalExpense || 0)}
-                        color="bg-red-800"
-                    />
+
+            {/* 🔴 TOP CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 max-w-7xl mx-auto mt-6">
+                <InfoCard
+                    icon={<Wallet />}
+                    label="Total Balance"
+                    value={addThousandSeparator(dashboardData?.totalBalance || 0)}
+                    color="bg-purple-800"
+                />
+                <InfoCard
+                    icon={<Coins />}
+                    label="Total Income"
+                    value={addThousandSeparator(dashboardData?.totalIncome || 0)}
+                    color="bg-green-800"
+                />
+                <InfoCard
+                    icon={<CreditCard />}
+                    label="Total Expense"
+                    value={addThousandSeparator(dashboardData?.totalExpense || 0)}
+                    color="bg-red-800"
+                />
+            </div>
+
+            {/* 🔴 MAIN CONTENT */}
+            <div className="mt-6 px-6 max-w-7xl mx-auto space-y-6">
+
+                {/* ROW 1 */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    <div className="lg:col-span-2 bg-white rounded-2xl shadow p-4 min-h-[300px]">
+                        <RecentTransactions
+                            transactions={dashboardData?.recentTransactions || []}
+                            onMore={() => navigate('/expense')}
+                        />
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow p-4 min-h-[300px]">
+                        <FinanceOverview
+                            totalBalance={dashboardData?.totalBalance || 0}
+                            totalIncome={dashboardData?.totalIncome || 0}
+                            totalExpense={dashboardData?.totalExpense || 0}
+                        />
+                    </div>
                 </div>
 
-                {/* Bottom Grid: Transaction Lists and Financial Overview Chart */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    
-                    <RecentTransactions
-                        transactions={dashboardData?.recentTransactions || []}
-                        onMore={() => navigate('/expense')}
-                    />
+                {/* ROW 2 */}
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    <FinanceOverview
-                        totalBalance={dashboardData?.totalBalance || 0}
-                        totalIncome={dashboardData?.totalIncome || 0}
-                        totalExpense={dashboardData?.totalExpense || 0}
-                    />
+    <div className="lg:col-span-2 bg-white rounded-2xl shadow p-4 min-h-[200px]">
+        <Transactions
+            title="Recent Expenses"
+            transactions={dashboardData?.recentFiveExpenses || []}  // ✅ FIXED
+            type="expense"
+            onMore={() => navigate('/expense')}
+        />
+    </div>
 
-                    <Transactions
-                        title="Recent Expenses"
-                        transactions={dashboardData?.latestExpenses || []}
-                        type="expense"
-                        onMore={() => navigate('/expense')}
-                    />
+    <div className="bg-white rounded-2xl shadow p-4 min-h-[200px]">
+        <Transactions
+            title="Recent Incomes"
+            transactions={dashboardData?.recentFiveIncomes || []}   // ✅ FIXED
+            type="income"
+            onMore={() => navigate('/income')}
+        />
+    </div>
 
-                    <Transactions
-                        title="Recent Incomes"
-                        transactions={dashboardData?.latestIncomes || []}
-                        type="income"
-                        onMore={() => navigate('/income')}
-                    />
-                    
-                </div>
+</div>
             </div>
         </Dashboard>
     );

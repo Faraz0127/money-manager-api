@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 const Input = ({ 
@@ -10,17 +10,15 @@ const Input = ({
     isSelect, 
     options 
 }) => {
-    // Local state to track whether the password should be masked or visible
     const [showPassword, setShowPassword] = useState(false);
+    const inputRef = useRef(null);
 
-    // Toggle function for the password visibility
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
     return (
         <div className="mb-4">
-            {/* 1. Conditionally render the label if the prop is passed */}
             {label && (
                 <label className="text-[13px] text-slate-800 block mb-1">
                     {label}
@@ -28,14 +26,12 @@ const Input = ({
             )}
 
             <div className="relative">
-                {/* 2. Conditionally render a dropdown <select> OR a standard <input> */}
                 {isSelect ? (
                     <select
                         value={value}
                         onChange={onChange}
                         className="w-full bg-transparent outline-none border border-gray-300 rounded-md px-3 py-2 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                     >
-                        {/* Map over the passed options array to generate dropdown items */}
                         {options?.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
@@ -45,7 +41,7 @@ const Input = ({
                 ) : (
                     <>
                         <input
-                            // Dynamically swap type if it's a password field and the toggle is active
+                            ref={inputRef}
                             type={
                                 type === 'password'
                                     ? showPassword
@@ -56,13 +52,17 @@ const Input = ({
                             value={value}
                             onChange={onChange}
                             placeholder={placeholder}
-                            className="w-full bg-transparent outline-none border border-gray-300 rounded-md px-3 py-2 pr-10 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                            className="w-full bg-transparent outline-none border border-gray-300 rounded-md px-3 py-2 pr-10 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            style={{
+                                // 🔥 CRITICAL: Proper password masking
+                                WebkitTextSecurity: type === 'password' && !showPassword ? 'disc' : 'none',
+                                letterSpacing: type === 'password' && !showPassword ? '0.3em' : 'normal',
+                            }}
                         />
                         
-                        {/* 3. Only render the Eye icon toggle if the original type is "password" */}
                         {type === 'password' && (
                             <span 
-                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70 transition-opacity"
                                 onClick={toggleShowPassword}
                             >
                                 {showPassword ? (

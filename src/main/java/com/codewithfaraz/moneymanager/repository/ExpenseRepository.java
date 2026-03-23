@@ -40,4 +40,10 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
     // Used by the background scheduler to fetch expenses for the daily summary email
     List<ExpenseEntity> findByProfileIdAndDate(Long profileId, LocalDate date);
+
+    List<ExpenseEntity> findByProfileIdAndDateBetweenOrderByDateDesc(
+            Long profileId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
 }

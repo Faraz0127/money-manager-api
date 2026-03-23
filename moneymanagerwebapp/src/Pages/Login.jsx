@@ -4,11 +4,11 @@ import { LoaderCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Layout and Custom Components
-import Input from '../components/Input';
+import Input from '../Components/Input';
 import { assets } from '../assets/assets'; 
 
 // Context & API
-import { AppContext } from '../context/AppContext';
+import { AppContext } from '../Context/AppContext';
 import axiosConfig from '../util/axiosConfig';
 import { API_ENDPOINTS } from '../util/apiEndpoints';
 import { validateEmail } from '../util/validation';

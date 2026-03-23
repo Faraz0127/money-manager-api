@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { User, Upload, Trash } from 'lucide-react';
 
 const ProfilePhotoSelector = ({ image, setImage }) => {
@@ -8,9 +8,18 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
     // Local state to store the temporary generated object URL for the image preview
     const [previewUrl, setPreviewUrl] = useState(null);
 
+    // ✅ ADD THIS HERE
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
+
     // Handles the file selection event
     const handleImageChange = (e) => {
-        const file = e.target.files;
+        const file = e.target.files[0];
         if (file) {
             // Update the parent's state with the actual file payload
             setImage(file);

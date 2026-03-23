@@ -15,6 +15,9 @@ const MenuBar = ({ activeMenu }) => {
     
     // Global context and navigation
     const { user, clearUser } = useContext(AppContext);
+
+    console.log(user);
+
     const navigate = useNavigate();
 
     // Handle closing the dropdown when clicking outside of it
@@ -70,11 +73,20 @@ const MenuBar = ({ activeMenu }) => {
                 {/* Right side (Profile picture avatar and dropdown) */}
                 <div className="relative" ref={dropdownRef}>
                     <button
-                        className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-800 focus:ring-offset-2"
-                        onClick={() => setShowDropdown(!showDropdown)}
-                    >
-                        <User className="text-purple-600" />
-                    </button>
+  className="w-10 h-10 rounded-full overflow-hidden border"
+  onClick={() => setShowDropdown(!showDropdown)}
+>
+  <img
+    src={
+      user?.profileImageUrl || "https://ui-avatars.com/api/?name=User"
+    }
+    alt="profile"
+    className="w-full h-full object-cover"
+    onError={(e) => {
+      e.target.src = "https://ui-avatars.com/api/?name=User";
+    }}
+  />
+</button>
 
                     {/* Dropdown Menu Content */}
                     {showDropdown && (
