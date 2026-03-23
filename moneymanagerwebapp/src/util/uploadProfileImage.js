@@ -11,7 +11,7 @@ const uploadProfileImage = async (image) => {
 
     try {
         // 2. Make an unsigned POST request to the Cloudinary API endpoint using Fetch
-        const response = await fetch(API_ENDPOINTS.uploadImage, { 
+        const response = await fetch(API_ENDPOINTS.UPLOAD_IMAGE, { 
             method: 'POST',
             body: formData
         });

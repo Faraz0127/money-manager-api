@@ -14,7 +14,7 @@ import Transactions from '../components/Transactions';
 
 // Utils and API Configuration
 import axiosConfig from '../util/axiosConfig';
-import { API_ENDPOINTS } from '../util/API_endpoints';
+import { API_ENDPOINTS } from '../util/apiEndpoints';
 import { addThousandSeparator } from '../util/helper';
 
 const Home = () => {
@@ -32,7 +32,7 @@ const Home = () => {
         setIsLoading(true);
         
         try {
-            const response = await axiosConfig.get(API_ENDPOINTS.dashboardData);
+            const response = await axiosConfig.get(API_ENDPOINTS.DASHBOARD_DATA);
             if (response.status === 200) {
                 setDashboardData(response.data);
             }

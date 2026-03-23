@@ -3,7 +3,7 @@ import { Menu, X, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import Sidebar from './Sidebar';
-import assets from '../assets/assets';
+import { assets } from '../assets/assets'; // ✅ named import
 
 const MenuBar = ({ activeMenu }) => {
     // Component States

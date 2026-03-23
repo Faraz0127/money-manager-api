@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-//import { API_ENDPOINTS } from './API_endpoints'; 
+import { BASE_URL } from './apiEndpoints'; 
 
 const axiosConfig = axios.create({
     baseURL: BASE_URL, // Originally hardcoded as 'http://localhost:8080/api/version1.0' or the Render production URL [2, 3]
@@ -23,7 +23,7 @@ const excludeEndpoints = [
 axiosConfig.interceptors.request.use(
     (config) => {
         // Checks if the request URL matches any of the excluded public endpoints [4]
-        const shouldSkipToken = excludeEndpoints.some((endpoint) => config.url.includes(endpoint));
+        const shouldSkipToken = config.url && excludeEndpoints.some((endpoint) => config.url.includes(endpoint));
 
         // If it shouldn't skip, attach the bearer token from local storage [5, 6]
         if (!shouldSkipToken) {

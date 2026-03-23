@@ -1,28 +1,29 @@
-import { createContext } from "react";
-import { useState } from 'react';
+import React, { createContext, useState } from 'react';
 
-const AppContext = createContext();
+// 1. Create and export the Context object
+export const AppContext = createContext();
 
-
-export const AppContextProvider = ({children}) => {
-    // State to hold the globally accessible user details
+// 2. Create and export the Provider component
+export const AppContextProvider = ({ children }) => {
+    
+    // State to hold the logged-in user's details globally
     const [user, setUser] = useState(null);
 
-    // Function to clear out the user data when logging out
-    // const clearUser = () => {
-    //     setUser(null);
-    // };
-
- // Object containing the state and functions to be passed down
-    const contextValue = {
-        user,
-        // setUser
+    // Helper function to wipe the user data upon logging out
+    const clearUser = () => {
+        setUser(null);
     };
 
-return (
+    // The object payload containing all state and setter functions to be accessed by consumers
+    const contextValue = {
+        user,
+        setUser,
+        clearUser
+    };
+
+    return (
         <AppContext.Provider value={contextValue}>
             {children}
         </AppContext.Provider>
     );
-}
-
+};

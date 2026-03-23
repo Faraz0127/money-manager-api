@@ -18,7 +18,8 @@ const Dashboard = ({ children, activeMenu }) => {
                     <MenuBar activeMenu={activeMenu} />
 
                     {/* Main Layout containing Sidebar and Right Side Content */}
-                    <div className="flex max-w-[1080px] mx-auto">
+                    {/* <div className="flex max-w-[1080px] mx-auto"> */}
+                    <div className="flex">
                         
                         {/* Left Sidebar - Hidden on mobile screens */}
                         <div className="hidden lg:block">

@@ -3,14 +3,14 @@ import toast from 'react-hot-toast';
 
 // Layout and Hooks
 import useUser from '../hooks/useUser';
-import Dashboard from '../components/Dashboard';
+import Dashboard from '../Components/Dashboard';
 
 // Components
-import IncomeOverview from '../components/IncomeOverview';
-import IncomeList from '../components/IncomeList';
-import Modal from '../components/Modal';
-import AddIncomeForm from '../components/AddIncomeForm';
-import DeleteAlert from '../components/DeleteAlert';
+import IncomeOverview from '../Components/IncomeOverview';
+import IncomeList from '../Components/IncomeList';
+import Modal from '../Components/Model';
+import AddIncomeForm from '../Components/AddIncomeForm';
+import DeleteAlert from '../Components/DeleteAlert';
 
 // API Utilities
 import axiosConfig from '../util/axiosConfig';
@@ -89,7 +89,7 @@ const Income = () => {
         }
 
         // Prevent future dates
-        const today = new Date().toISOString().split('T');
+        const today = new Date().toISOString().split('T')[0];
         if (date > today) {
             toast.error("Date cannot be in the future");
             return;

@@ -12,7 +12,7 @@ import TransactionInfoCard from '../components/TransactionInfoCard';
 
 // API Utilities
 import axiosConfig from '../util/axiosConfig';
-import { API_ENDPOINTS } from '../util/API_endpoints';
+import { API_ENDPOINTS } from '../util/apiEndpoints';
 
 const Filter = () => {
     // 1. Verify user authentication
@@ -37,7 +37,7 @@ const Filter = () => {
 
         try {
             // Post payload to backend filter API
-            const response = await axiosConfig.post(API_ENDPOINTS.applyFilters, {
+            const response = await axiosConfig.post(API_ENDPOINTS.APPLY_FILTERS, {
                 type,
                 startDate,
                 endDate,

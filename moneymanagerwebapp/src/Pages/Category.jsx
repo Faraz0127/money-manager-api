@@ -8,7 +8,7 @@ import Dashboard from '../Components/Dashboard';
 
 // Components
 import CategoryList from '../Components/CategoryList';
-import Modal from '../Components/Modal';
+import Modal from '../Components/Model';
 import AddCategoryForm from '../Components/AddCategoryForm';
 
 // API utilities

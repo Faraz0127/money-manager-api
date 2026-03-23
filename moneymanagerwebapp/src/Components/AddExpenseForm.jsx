@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LoaderCircle } from 'lucide-react';
-
-// Custom reusable components
 import Input from './Input';
 import EmojiPickerPopup from './EmojiPickerPopup';
 
-const AddIncomeForm = ({ onAddIncome, categories }) => {
-    // 1. Component States
+const AddExpenseForm = ({ onAddExpense, categories }) => {
     const [loading, setLoading] = useState(false);
-    const [income, setIncome] = useState({
+    const [expense, setExpense] = useState({
         name: '',
         amount: '',
         date: '',
@@ -16,33 +13,25 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
         categoryId: ''
     });
 
-    // 2. Map the fetched categories into label/value pairs for the dropdown
     const categoryOptions = categories?.map((category) => ({
         value: category.id,
         label: category.name
     })) || [];
 
-    // 3. Auto-select the first category if available and none is currently selected
     useEffect(() => {
-        if (categories.length > 0 && !income.categoryId) {
-            setIncome((prev) => ({
-                ...prev,
-                categoryId: categories[0].id
-            }));
+        if (categories.length > 0 && !expense.categoryId) {
+            setExpense((prev) => ({ ...prev, categoryId: categories[0].id }));
         }
-    }, [categories, income.categoryId]);
+    }, [categories, expense.categoryId]);
 
-    // 4. Dynamic change handler for all form fields
     const handleChange = (key, value) => {
-        setIncome((prev) => ({ ...prev, [key]: value }));
+        setExpense((prev) => ({ ...prev, [key]: value }));
     };
 
-    // 5. Submit Handler with loading state wrapper
-    const handleAddIncome = async () => {
+    const handleAddExpense = async () => {
         setLoading(true);
         try {
-            // Passes the local state object up to Income.jsx to hit the API
-            await onAddIncome(income);
+            await onAddExpense(expense);
         } finally {
             setLoading(false);
         }
@@ -50,63 +39,51 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
 
     return (
         <div className="p-4">
-            {/* Emoji Icon Picker */}
             <EmojiPickerPopup
-                icon={income.icon}
+                icon={expense.icon}
                 onSelect={(selectedIcon) => handleChange('icon', selectedIcon)}
             />
-
-            {/* Income Source Name Input */}
             <Input
-                label="Income Source"
-                placeholder="Example: Salary, Freelance, Bonus"
+                label="Expense Name"
+                placeholder="Example: Rent, Groceries, Netflix"
                 type="text"
-                value={income.name}
+                value={expense.name}
                 onChange={(e) => handleChange('name', e.target.value)}
             />
-
-            {/* Category Dropdown */}
             <Input
                 label="Category"
-                value={income.categoryId}
+                value={expense.categoryId}
                 onChange={(e) => handleChange('categoryId', e.target.value)}
                 isSelect={true}
                 options={categoryOptions}
             />
-
-            {/* Amount Input */}
             <Input
                 label="Amount"
                 placeholder="500"
                 type="number"
-                value={income.amount}
+                value={expense.amount}
                 onChange={(e) => handleChange('amount', e.target.value)}
             />
-
-            {/* Date Input */}
             <Input
                 label="Date"
                 type="date"
-                value={income.date}
+                value={expense.date}
                 onChange={(e) => handleChange('date', e.target.value)}
             />
-
-            {/* Submit Button */}
             <div className="flex justify-end mt-6">
                 <button
                     type="button"
                     className="btn-primary flex items-center gap-2"
-                    onClick={handleAddIncome}
+                    onClick={handleAddExpense}
                     disabled={loading}
                 >
-                    {/* Dynamic Rendering for loading spinner */}
                     {loading ? (
                         <>
                             <LoaderCircle className="animate-spin w-4 h-4" />
                             Adding...
                         </>
                     ) : (
-                        'Add Income'
+                        'Add Expense'
                     )}
                 </button>
             </div>
@@ -114,4 +91,4 @@ const AddIncomeForm = ({ onAddIncome, categories }) => {
     );
 };
 
-export default AddIncomeForm;
+export default AddExpenseForm;

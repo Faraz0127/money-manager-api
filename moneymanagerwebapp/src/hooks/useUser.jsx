@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import axiosConfig from '../util/axiosConfig';
-import { API_ENDPOINTS } from '../util/API_endpoints';
+import { API_ENDPOINTS } from '../util/apiEndpoints';
 
 const useUser = () => {
     // 1. Extract context methods

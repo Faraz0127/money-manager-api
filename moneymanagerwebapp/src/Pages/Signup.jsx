@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { LoaderCircle } from 'lucide-react';
-import Input from '../components/Input';
+import Input from '../Components/Input';
 import ProfilePhotoSelector from '../Components/ProfilePhotoSelector';
 import { assets } from '../assets/assets'  // ✅ named import
 import { validateEmail } from '../util/validation';
@@ -122,7 +122,7 @@ const Signup = () => {
                             </p>
                         )} 
 
-                        {/* <button 
+                        <button 
                             type="submit" 
                             disabled={isLoading}
                             className={`btn-primary w-full py-3 text-lg font-medium flex items-center justify-center gap-2 ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
@@ -135,7 +135,7 @@ const Signup = () => {
                             ) : (
                                 "Sign Up"
                             )}
-                        </button> */}
+                        </button>
 
                     </form>
 
