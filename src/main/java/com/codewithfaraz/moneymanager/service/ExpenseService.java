@@ -113,16 +113,12 @@ public class ExpenseService {
                 .build();
     }
 
-    public List<ExpenseDTO> getExpensesByDateRange(LocalDate startDate, LocalDate endDate) {
-        ProfileEntity profile = profileService.getCurrentProfile();
+    public List<ExpenseDTO> getExpensesByDateRange(Long profileId, LocalDate start, LocalDate end) {
 
-        return expenseRepository.findByProfileIdAndDateBetweenOrderByDateDesc(
-                        profile.getId(),
-                        startDate,
-                        endDate
-                )
+        return expenseRepository
+                .findByProfileIdAndDateBetween(profileId, start, end) // ✅ use param
                 .stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

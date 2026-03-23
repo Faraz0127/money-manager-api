@@ -103,11 +103,11 @@ public class IncomeService {
                 .build();
     }
 
-    public List<IncomeDTO> getIncomesByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<IncomeDTO> getIncomesByDateRange(Long profileId, LocalDate startDate, LocalDate endDate) {
         ProfileEntity profile = profileService.getCurrentProfile();
 
         return incomeRepository.findByProfileIdAndDateBetweenOrderByDateDesc(
-                        profile.getId(),
+                        profileId,
                         startDate,
                         endDate
                 )

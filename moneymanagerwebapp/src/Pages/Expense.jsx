@@ -20,27 +20,28 @@ const Expense = () => {
     const [loading, setLoading] = useState(false);
     const [expenseData, setExpenseData] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState(moment());
+
+    // ✅ FIXED STATE (NO moment object)
+    const [selectedMonth, setSelectedMonth] = useState({
+        startDate: moment().startOf('month').format('YYYY-MM-DD'),
+        endDate: moment().endOf('month').format('YYYY-MM-DD')
+    });
+
     const [openAddExpenseModal, setOpenAddExpenseModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
 
-    // Fetch expense data by date range (month)
-    const fetchExpenseDetails = async (monthDate) => {
+    // ✅ FIXED FETCH FUNCTION
+    const fetchExpenseDetails = async (filters) => {
         if (loading) return;
         setLoading(true);
-        
+
         try {
-            // Get start and end dates of the selected month
-            const startDate = monthDate.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = monthDate.clone().endOf('month').format('YYYY-MM-DD');
+            const { startDate, endDate } = filters;
 
             const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_EXPENSES, {
-                params: {
-                    startDate: startDate,
-                    endDate: endDate
-                }
+                params: { startDate, endDate }
             });
-            
+
             if (response.status === 200) {
                 setExpenseData(response.data);
             }
@@ -52,42 +53,62 @@ const Expense = () => {
         }
     };
 
+    // Fetch categories
     const fetchExpenseCategories = async () => {
         try {
             const response = await axiosConfig.get(API_ENDPOINTS.CATEGORY_BY_TYPE("expense"));
-            if (response.status === 200) setCategories(response.data);
+            if (response.status === 200) {
+                setCategories(response.data);
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch expense categories");
         }
     };
 
-    // Trigger initial data loads
+    // Initial load
     useEffect(() => {
         fetchExpenseDetails(selectedMonth);
         fetchExpenseCategories();
     }, []);
 
-    // Fetch data when month changes
+    // On month change
     useEffect(() => {
         fetchExpenseDetails(selectedMonth);
     }, [selectedMonth]);
 
+    // Add Expense
     const handleAddExpense = async (expense) => {
         const { name, amount, date, categoryId } = expense;
 
-        if (!name?.trim()) { toast.error("Name is required"); return; }
-        if (!amount || isNaN(amount) || Number(amount) <= 0) { toast.error("Amount must be greater than zero"); return; }
-        if (!date) { toast.error("Please select a date"); return; }
-        if (!categoryId) { toast.error("Please select a category"); return; }
+        if (!name?.trim()) {
+            toast.error("Name is required");
+            return;
+        }
+        if (!amount || isNaN(amount) || Number(amount) <= 0) {
+            toast.error("Amount must be greater than zero");
+            return;
+        }
+        if (!date) {
+            toast.error("Please select a date");
+            return;
+        }
+        if (!categoryId) {
+            toast.error("Please select a category");
+            return;
+        }
 
         const today = new Date().toISOString().split('T')[0];
-        if (date > today) { toast.error("Date cannot be in the future"); return; }
+        if (date > today) {
+            toast.error("Date cannot be in the future");
+            return;
+        }
 
         try {
             const response = await axiosConfig.post(API_ENDPOINTS.ADD_EXPENSE, {
                 ...expense,
                 amount: Number(amount)
             });
+
             if (response.status === 200 || response.status === 201) {
                 toast.success("Expense added successfully");
                 setOpenAddExpenseModal(false);
@@ -99,6 +120,7 @@ const Expense = () => {
         }
     };
 
+    // Delete Expense
     const deleteExpense = async (id) => {
         try {
             await axiosConfig.delete(API_ENDPOINTS.DELETE_EXPENSE(id));
@@ -110,47 +132,45 @@ const Expense = () => {
         }
     };
 
+    // ✅ FIXED DOWNLOAD
     const handleDownloadExpenseDetails = async () => {
         try {
-            // Include date range in download
-            const startDate = selectedMonth.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = selectedMonth.clone().endOf('month').format('YYYY-MM-DD');
+            const { startDate, endDate } = selectedMonth;
 
             const response = await axiosConfig.get(API_ENDPOINTS.EXPENSE_EXCEL_DOWNLOAD, {
-                params: {
-                    startDate: startDate,
-                    endDate: endDate
-                },
+                params: { startDate, endDate },
                 responseType: 'blob'
             });
-            
-            const fileName = `expense_${selectedMonth.format('MMMM_YYYY')}.xlsx`;
+
+            const fileName = `expense_${startDate}_to_${endDate}.xlsx`;
+
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
+
             link.href = url;
             link.setAttribute('download', fileName);
             document.body.appendChild(link);
             link.click();
-            link.parentNode.removeChild(link);
-            window.URL.revokeObjectURL(url);
+            link.remove();
+
             toast.success("Expense details downloaded successfully");
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to download expense");
         }
     };
 
+    // ✅ FIXED EMAIL
     const handleEmailExpenseDetails = async () => {
         try {
-            const startDate = selectedMonth.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = selectedMonth.clone().endOf('month').format('YYYY-MM-DD');
+            const { startDate, endDate } = selectedMonth;
 
             const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_EXPENSE, {
-                params: {
-                    startDate: startDate,
-                    endDate: endDate
-                }
+                params: { startDate, endDate }
             });
-            if (response.status === 200) toast.success("Expense details emailed successfully");
+
+            if (response.status === 200) {
+                toast.success("Expense details emailed successfully");
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to email expense");
         }
@@ -159,8 +179,8 @@ const Expense = () => {
     return (
         <Dashboard activeMenu="Expense">
             <div className="my-5 mx-auto">
-                
-                {/* Month Selector */}
+
+                {/* ✅ DO NOT CHANGE */}
                 <MonthYearPicker onMonthChange={setSelectedMonth} />
 
                 <div className="grid grid-cols-1 gap-6">
@@ -168,6 +188,7 @@ const Expense = () => {
                         transactions={expenseData}
                         onAddExpense={() => setOpenAddExpenseModal(true)}
                     />
+
                     <ExpenseList
                         transactions={expenseData}
                         onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })}
@@ -176,6 +197,7 @@ const Expense = () => {
                     />
                 </div>
 
+                {/* Add Modal */}
                 <Modal
                     isOpen={openAddExpenseModal}
                     onClose={() => setOpenAddExpenseModal(false)}
@@ -187,6 +209,7 @@ const Expense = () => {
                     />
                 </Modal>
 
+                {/* Delete Modal */}
                 <Modal
                     isOpen={openDeleteAlert.show}
                     onClose={() => setOpenDeleteAlert({ show: false, data: null })}
@@ -197,6 +220,7 @@ const Expense = () => {
                         onDelete={() => deleteExpense(openDeleteAlert.data)}
                     />
                 </Modal>
+
             </div>
         </Dashboard>
     );

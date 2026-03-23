@@ -26,39 +26,37 @@ const Income = () => {
     const [loading, setLoading] = useState(false);
     const [incomeData, setIncomeData] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState(moment());
+    const [selectedMonth, setSelectedMonth] = useState({
+    startDate: moment().startOf('month').format('YYYY-MM-DD'),
+    endDate: moment().endOf('month').format('YYYY-MM-DD')
+});
     
     // Modal States
     const [openAddIncomeModel, setOpenAddIncomeModel] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
 
     // 3. Fetch income by date range (month)
-    const fetchIncomeDetails = async (monthDate) => {
-        if (loading) return;
-        setLoading(true);
-        
-        try {
-            // Get start and end dates of the selected month
-            const startDate = monthDate.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = monthDate.clone().endOf('month').format('YYYY-MM-DD');
+    const fetchIncomeDetails = async (filters) => {
+    if (loading) return;
+    setLoading(true);
 
-            const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_INCOMES, {
-                params: {
-                    startDate: startDate,
-                    endDate: endDate
-                }
-            });
-            
-            if (response.status === 200) {
-                setIncomeData(response.data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch income details", error);
-            toast.error(error.response?.data?.message || "Failed to fetch income details");
-        } finally {
-            setLoading(false);
+    try {
+        const { startDate, endDate } = filters;
+
+        const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_INCOMES, {
+            params: { startDate, endDate }
+        });
+
+        if (response.status === 200) {
+            setIncomeData(response.data);
         }
-    };
+    } catch (error) {
+        console.error("Failed to fetch income details", error);
+        toast.error(error.response?.data?.message || "Failed to fetch income details");
+    } finally {
+        setLoading(false);
+    }
+};
 
     // 4. Fetch income-specific categories for the add form dropdown
     const fetchIncomeCategories = async () => {
@@ -150,8 +148,7 @@ const Income = () => {
     const handleDownloadIncomeDetails = async () => {
         try {
             // Include date range in download
-            const startDate = selectedMonth.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = selectedMonth.clone().endOf('month').format('YYYY-MM-DD');
+            const { startDate, endDate } = selectedMonth;
 
             const response = await axiosConfig.get(API_ENDPOINTS.INCOME_EXCEL_DOWNLOAD, {
                 params: {
@@ -161,7 +158,7 @@ const Income = () => {
                 responseType: 'blob'
             });
             
-            const fileName = `income_${selectedMonth.format('MMMM_YYYY')}.xlsx`;
+            const fileName = `income_${startDate}_to_${endDate}.xlsx`;
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             
@@ -182,8 +179,7 @@ const Income = () => {
     // 8. Handle Emailing Excel Report
     const handleEmailIncomeDetails = async () => {
         try {
-            const startDate = selectedMonth.clone().startOf('month').format('YYYY-MM-DD');
-            const endDate = selectedMonth.clone().endOf('month').format('YYYY-MM-DD');
+            const { startDate, endDate } = selectedMonth;
 
             const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_INCOME, {
                 params: {
