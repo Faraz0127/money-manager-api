@@ -22,10 +22,11 @@ const Expense = () => {
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
 
     const fetchExpenseDetails = async () => {
-        if (loading) return;
-        setLoading(true);
-        try {
-            const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_EXPENSES);
+    if (loading) return;
+    setLoading(true);
+    console.log("GET_ALL_EXPENSES value:", API_ENDPOINTS.GET_ALL_EXPENSES); // ← add this
+    try {
+        const response = await axiosConfig.get(API_ENDPOINTS.GET_ALL_EXPENSES);
             if (response.status === 200) setExpenseData(response.data);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch expense details");
@@ -59,7 +60,6 @@ const Expense = () => {
         const today = new Date().toISOString().split('T')[0]; // ✅ [0] fix
         if (date > today) { toast.error("Date cannot be in the future"); return; }
 
-        console.log("Sending expense:", { name, amount, date, categoryId });
         
         try {
     const response = await axiosConfig.post(API_ENDPOINTS.ADD_EXPENSE, {

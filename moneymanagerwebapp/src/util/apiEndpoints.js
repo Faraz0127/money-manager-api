@@ -23,6 +23,13 @@ export const API_ENDPOINTS = {
     EMAIL_INCOME: "/email/income-excel",
     APPLY_FILTERS: "/filter",
     DASHBOARD_DATA: "/dashboard",
+
+    GET_ALL_EXPENSES: '/expenses',
+    ADD_EXPENSE: '/expenses',
+    DELETE_EXPENSE: (expenseId) => `/expenses/${expenseId}`,
+    CATEGORY_BY_TYPE_EXPENSE: (type) => `/categories/${type}`,
+    EXPENSE_EXCEL_DOWNLOAD: '/excel/download/expense',
+    EMAIL_EXPENSE: '/email/expense-excel',
      
     // Public profile route
     UPLOAD_IMAGE: `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`
