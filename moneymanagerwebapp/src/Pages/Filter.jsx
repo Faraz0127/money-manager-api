@@ -4,11 +4,11 @@ import toast from 'react-hot-toast';
 import moment from 'moment';
 
 // Layout and Custom Hooks
-import Dashboard from '../components/Dashboard';
+import Dashboard from '../Components/Dashboard';
 import useUser from '../hooks/useUser';
 
 // Components
-import TransactionInfoCard from '../components/TransactionInfoCard';
+import TransactionInfoCard from '../Components/TransactionInfoCard';
 
 // API Utilities
 import axiosConfig from '../util/axiosConfig';
@@ -56,7 +56,7 @@ const Filter = () => {
     };
 
     return (
-        <Dashboard activeMenu="filters">
+        <Dashboard activeMenu="Filters">
             <div className="my-5 mx-auto">
                 
                 {/* Page Header */}

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
+import { AppContext } from '../Context/AppContext';
 import Sidebar from './Sidebar';
 import { assets } from '../assets/assets'; // ✅ named import
 
@@ -16,9 +16,12 @@ const MenuBar = ({ activeMenu }) => {
     // Global context and navigation
     const { user, clearUser } = useContext(AppContext);
 
-    console.log(user);
-
     const navigate = useNavigate();
+
+    // 🔥 DEBUG: Log current active menu
+    useEffect(() => {
+        console.log('MenuBar activeMenu:', activeMenu);
+    }, [activeMenu]);
 
     // Handle closing the dropdown when clicking outside of it
     useEffect(() => {
@@ -62,31 +65,36 @@ const MenuBar = ({ activeMenu }) => {
                         )}
                     </button>
 
-                    <div className="flex items-center gap-2">
-                        <img src={assets.logo} alt="logo" className="w-10 h-10" />
-                        <span className="text-lg font-medium text-black truncate">
-                            Money Manager
-                        </span>
-                    </div>
+                    <div className="flex items-center gap-3">
+    <img 
+        src="/logo.png" 
+        alt="logo"
+        className="w-12 h-12 object-contain scale-125"
+    />
+
+    <span className="text-lg sm:text-xl font-bold text-gray-800">
+        Personal Wallet Tracker
+    </span>
+</div>
                 </div>
 
                 {/* Right side (Profile picture avatar and dropdown) */}
                 <div className="relative" ref={dropdownRef}>
                     <button
-  className="w-10 h-10 rounded-full overflow-hidden border"
-  onClick={() => setShowDropdown(!showDropdown)}
->
-  <img
-    src={
-      user?.profileImageUrl || "https://ui-avatars.com/api/?name=User"
-    }
-    alt="profile"
-    className="w-full h-full object-cover"
-    onError={(e) => {
-      e.target.src = "https://ui-avatars.com/api/?name=User";
-    }}
-  />
-</button>
+                        className="w-10 h-10 rounded-full overflow-hidden border hover:opacity-80 transition-opacity"
+                        onClick={() => setShowDropdown(!showDropdown)}
+                    >
+                        <img
+                            src={
+                                user?.profileImageUrl || "https://ui-avatars.com/api/?name=User"
+                            }
+                            alt="profile"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                                e.target.src = "https://ui-avatars.com/api/?name=User";
+                            }}
+                        />
+                    </button>
 
                     {/* Dropdown Menu Content */}
                     {showDropdown && (

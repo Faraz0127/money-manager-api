@@ -27,10 +27,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
-        return path.equals("/register")
-    || path.equals("/login")
-    || path.equals("/activate")
-    || path.equals("/health") || path.equals("/error");
+        return path.startsWith("/api/v1.0/login")
+                || path.startsWith("/api/v1.0/register")
+                || path.startsWith("/api/v1.0/activate")
+                || path.startsWith("/api/v1.0/health")
+                || path.startsWith("/error");
     }
 
     @Override

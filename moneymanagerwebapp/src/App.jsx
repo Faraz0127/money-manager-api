@@ -10,14 +10,15 @@ import Category from './Pages/Category';
 import Filter from './Pages/Filter';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
+import Landing from './Pages/Landing';
 
 // Root Component to handle default routing based on authentication
 const RootComponent = () => {
     // Check if the user is authenticated by looking for the token in local storage
     const isAuthenticated = !!localStorage.getItem('token');
     
-    // Redirect to the dashboard if authenticated, otherwise redirect to login
-    return isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+    // 🔥 FIXED: Redirect to Landing if not authenticated, Dashboard if authenticated
+    return isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/landing" />;
 };
 
 const App = () => {
@@ -28,7 +29,10 @@ const App = () => {
                     {/* Base Route */}
                     <Route path="/" element={<RootComponent />} />
                     
-                    {/* Application Routes */}
+                    {/* Landing Page Route - Show first */}
+                    <Route path="/landing" element={<Landing />} />
+                    
+                    {/* Application Routes (Protected) */}
                     <Route path="/dashboard" element={<Home />} />
                     <Route path="/income" element={<Income />} />
                     <Route path="/expense" element={<Expense />} />

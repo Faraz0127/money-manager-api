@@ -95,6 +95,11 @@ const Login = () => {
                     <h3 className="text-2xl font-semibold text-black text-center mb-2">
                         Welcome back
                     </h3>
+                    <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg p-3 mb-4 text-center">
+  ⏱️ Backend is hosted on Render free tier.<br/>
+  First login may take <b>60–120 seconds</b> to respond.<br/>
+  Please wait and do not refresh.
+</div>
                     <p className="text-sm text-slate-700 text-center mb-8">
                         Please enter your details to login
                     </p>

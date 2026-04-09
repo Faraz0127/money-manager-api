@@ -16,17 +16,14 @@ import axiosConfig from '../util/axiosConfig';
 import { API_ENDPOINTS } from '../util/apiEndpoints';
 
 const Category = () => {
-    // 1. Verify user authentication [1]
     useUser(); 
 
-    // 2. Component States [2]
     const [loading, setLoading] = useState(false);
     const [categoryData, setCategoryData] = useState([]);
     const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
     const [openEditCategoryModal, setOpenEditCategoryModal] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // 3. Fetch all categories on mount [3-5]
     const fetchCategoryDetails = async () => {
         if (loading) return;
         setLoading(true);
@@ -48,17 +45,14 @@ const Category = () => {
         fetchCategoryDetails();
     }, []);
 
-    // 4. Handle Adding a New Category [6-8]
     const handleAddCategory = async (category) => {
         const { name, type, icon } = category;
 
-        // Basic validation
         if (!name.trim()) {
             toast.error("Category name is required");
             return;
         }
 
-        // Frontend validation to prevent duplicate API requests [9]
         const isDuplicate = categoryData.some(
             (cat) => cat.name.toLowerCase() === name.trim().toLowerCase()
         );
@@ -76,8 +70,8 @@ const Category = () => {
             
             if (response.status === 201) {
                 toast.success("Category added successfully");
-                setOpenAddCategoryModal(false); // Close Modal
-                fetchCategoryDetails(); // Refresh list
+                setOpenAddCategoryModal(false);
+                fetchCategoryDetails();
             }
         } catch (error) {
             console.error("Error adding category", error);
@@ -85,13 +79,11 @@ const Category = () => {
         }
     };
 
-    // 5. Handle opening the Edit Modal and selecting a category [10-12]
     const handleEditCategory = (categoryToEdit) => {
         setSelectedCategory(categoryToEdit);
         setOpenEditCategoryModal(true);
     };
 
-    // 6. Handle Updating an Existing Category [13-15]
     const handleUpdateCategory = async (updatedCategory) => {
         const { id, name, type, icon } = updatedCategory;
         
@@ -114,9 +106,9 @@ const Category = () => {
             
             if (response.status === 200) {
                 toast.success("Category updated successfully");
-                setOpenEditCategoryModal(false); // Close Modal
-                setSelectedCategory(null); // Clear selected item
-                fetchCategoryDetails(); // Refresh list
+                setOpenEditCategoryModal(false);
+                setSelectedCategory(null);
+                fetchCategoryDetails();
             }
         } catch (error) {
             console.error("Error updating the category", error);
@@ -125,11 +117,11 @@ const Category = () => {
     };
 
     return (
-        // Wrap the page in the universal dashboard layout and highlight the "Category" menu item [16, 17]
+    <>
+        {/* 🔥 FIX: Pass correct activeMenu "Category" */}
         <Dashboard activeMenu="Category">
             <div className="my-5 mx-auto">
                 
-                {/* Header & Add Button Section [18, 19] */}
                 <div className="flex justify-between items-center mb-5">
                     <h2 className="text-2xl font-semibold">All Categories</h2>
                     
@@ -141,13 +133,11 @@ const Category = () => {
                     </button>
                 </div>
 
-                {/* Category List Render [20-22] */}
                 <CategoryList 
                     categories={categoryData}
                     onEditCategory={handleEditCategory}
                 />
 
-                {/* Add Category Modal [23-25] */}
                 <Modal 
                     isOpen={openAddCategoryModal}
                     onClose={() => setOpenAddCategoryModal(false)}
@@ -156,7 +146,6 @@ const Category = () => {
                     <AddCategoryForm onAddCategory={handleAddCategory} />
                 </Modal>
 
-                {/* Update Category Modal [26-28] */}
                 <Modal 
                     isOpen={openEditCategoryModal}
                     onClose={() => {
@@ -165,7 +154,6 @@ const Category = () => {
                     }}
                     title="Update Category"
                 >
-                    {/* Notice the isEditing flag and initialCategoryData props [28] */}
                     <AddCategoryForm 
                         isEditing={true} 
                         initialCategoryData={selectedCategory} 
@@ -175,7 +163,8 @@ const Category = () => {
                 
             </div>
         </Dashboard>
-    );
+    </>
+);
 };
 
 export default Category;
