@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Dashboard from './Components/Dashboard';
 
 // Page Components
 import Home from './Pages/Home';
@@ -14,11 +15,7 @@ import Landing from './Pages/Landing';
 
 // Root Component to handle default routing based on authentication
 const RootComponent = () => {
-    // Check if the user is authenticated by looking for the token in local storage
-    const isAuthenticated = !!localStorage.getItem('token');
-    
-    // 🔥 FIXED: Redirect to Landing if not authenticated, Dashboard if authenticated
-    return isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/landing" />;
+    return <Navigate to="/landing" />;
 };
 
 const App = () => {
@@ -33,7 +30,14 @@ const App = () => {
                     <Route path="/landing" element={<Landing />} />
                     
                     {/* Application Routes (Protected) */}
-                    <Route path="/dashboard" element={<Home />} />
+                    <Route 
+  path="/dashboard" 
+  element={
+    <Dashboard activeMenu="Dashboard">
+      <Home />
+    </Dashboard>
+  } 
+/>
                     <Route path="/income" element={<Income />} />
                     <Route path="/expense" element={<Expense />} />
                     <Route path="/category" element={<Category />} />

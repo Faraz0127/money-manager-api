@@ -61,46 +61,39 @@ const Dashboard = ({ children, activeMenu, onDashboardDataChange }) => {
     }, [activeMenu]);
 
     return (
-        <>
-            {user && (
-                <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50">
 
-                    {/* Top Navbar - PASS activeMenu here */}
-                    <MenuBar activeMenu={activeMenu} />
+        {/* Top Navbar */}
+        <MenuBar activeMenu={activeMenu} />
 
-                    <div className="flex">
+        <div className="flex">
 
-                        {/* Sidebar - PASS activeMenu here */}
-                        <div className="hidden lg:block">
-                            <Sidebar activeMenu={activeMenu} />
-                        </div>
+            {/* Sidebar */}
+            <div className="hidden lg:block">
+                <Sidebar activeMenu={activeMenu} />
+            </div>
 
-                        {/* Main Content */}
-                        <div className="grow mx-5">
+            {/* Main Content */}
+            <div className="grow mx-5">
 
-                            {/* 🔥 Month Picker - Only show on Dashboard */}
-                            {activeMenu === 'Dashboard' && (
-                                <div className="mt-5">
-                                    <MonthYearPicker onMonthChange={setSelectedMonth} />
-                                </div>
-                            )}
-
-                            {/* Show current month */}
-                            {activeMenu === 'Dashboard' && (
-                                <h2 className="text-lg font-semibold mb-4 mt-4">
-                                    {moment(selectedMonth.startDate).format("MMMM YYYY")}
-                                </h2>
-                            )}
-
-                            {/* 🔥 Render children normally */}
-                            {children}
-                        </div>
-
+                {activeMenu === 'Dashboard' && (
+                    <div className="mt-5">
+                        <MonthYearPicker onMonthChange={setSelectedMonth} />
                     </div>
-                </div>
-            )}
-        </>
-    );
+                )}
+
+                {activeMenu === 'Dashboard' && (
+                    <h2 className="text-lg font-semibold mb-4 mt-4">
+                        {moment(selectedMonth.startDate).format("MMMM YYYY")}
+                    </h2>
+                )}
+
+                {children}
+            </div>
+
+        </div>
+    </div>
+);
 };
 
 export default Dashboard;
